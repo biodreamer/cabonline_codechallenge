@@ -4,6 +4,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import se.cabonline.codechallenge.biodreamer.database.AnimalBreedEntry;
+import se.cabonline.codechallenge.biodreamer.filecache.FileCache;
 import se.cabonline.codechallenge.biodreamer.gui.DogBreedsViewModel;
 
 public class DogBreedRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Observer<List<AnimalBreedEntry>>
@@ -67,7 +69,14 @@ public class DogBreedRecycleViewAdapter extends RecyclerView.Adapter<RecyclerVie
             itemView.setContentDescription(item.breed);
             if(itemView instanceof ImageView)
             {
-                Picasso.get().load(item.imageUri).into((ImageView) itemView);
+                FileCache imageCache = new FileCache(itemView.getContext(),item.imageUri);
+                String fileUrl = imageCache.getImageCacheUrl();
+                RequestCreator image = Picasso.get().load(fileUrl);
+                image.into((ImageView) itemView);
+                if(item.imageUri.equals(fileUrl))
+                {
+                    image.into(imageCache);
+                }
             }
         }
     }
