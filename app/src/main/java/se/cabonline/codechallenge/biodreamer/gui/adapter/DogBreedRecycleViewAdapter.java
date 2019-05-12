@@ -1,7 +1,10 @@
 package se.cabonline.codechallenge.biodreamer.gui.adapter;
 
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -13,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
+import se.cabonline.codechallenge.biodreamer.R;
 import se.cabonline.codechallenge.biodreamer.database.AnimalBreedEntry;
 import se.cabonline.codechallenge.biodreamer.filecache.FileCache;
 import se.cabonline.codechallenge.biodreamer.gui.DogBreedsViewModel;
@@ -36,7 +40,7 @@ public class DogBreedRecycleViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public @NonNull RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        ImageView view = new ImageView(parent.getContext());
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.breed_list_item,parent,false);
         return new DogBreedViewHolder(view);
     }
 
@@ -58,26 +62,29 @@ public class DogBreedRecycleViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     class DogBreedViewHolder extends RecyclerView.ViewHolder
     {
-        DogBreedViewHolder(@NonNull ImageView itemView)
+        private final ImageView image;
+        private final TextView label;
+        DogBreedViewHolder(@NonNull View itemView)
         {
             super(itemView);
+            image = itemView.findViewById(R.id.image);
+            label = itemView.findViewById(R.id.label);
         }
 
         void bind(AnimalBreedEntry item)
         {
             itemView.setTag(item);
-            itemView.setContentDescription(item.breed);
-            if(itemView instanceof ImageView)
+            image.setContentDescription(item.breed);
+            label.setText(item.breed);
+
+            FileCache imageCache = new FileCache(itemView.getContext(),item.imageUri);
+            String fileUrl = imageCache.getImageCacheUrl();
+            RequestCreator imageCreator = Picasso.get().load(fileUrl);
+            imageCreator.into(image);
+            /*if(item.imageUri.equals(fileUrl))
             {
-                FileCache imageCache = new FileCache(itemView.getContext(),item.imageUri);
-                String fileUrl = imageCache.getImageCacheUrl();
-                RequestCreator image = Picasso.get().load(fileUrl);
-                image.into((ImageView) itemView);
-                if(item.imageUri.equals(fileUrl))
-                {
-                    image.into(imageCache);
-                }
-            }
+                imageCreator.into(imageCache);
+            }*/
         }
     }
 }
