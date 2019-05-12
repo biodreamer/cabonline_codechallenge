@@ -2,7 +2,6 @@ package se.cabonline.codechallenge.biodreamer.database;
 
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import se.cabonline.codechallenge.biodreamer.dogapi.DogApiClient;
@@ -15,7 +14,6 @@ public class AsyncUpdateAllBreeds extends AsyncTask<DogBreedsDao,Void,Void>
         if(param.length > 0)
         {
             DogBreedsDao dao = param[0];
-            List<AnimalBreedEntry> newEntries = new ArrayList<>();
             List<String> localBreeds = dao.getAllBreedsList();
             DogApiClient client = new DogApiClient();
             List<String> breeds = client.getAllBreeds();

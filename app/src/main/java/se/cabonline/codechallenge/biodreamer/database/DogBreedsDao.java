@@ -16,8 +16,8 @@ public interface DogBreedsDao
     @Query("SELECT breed FROM AnimalBreedEntry")
     List<String> getAllBreedsList();
 
-    @Query("SELECT imageUri FROM AnimalBreedEntry WHERE breed = :breed")
-    List<String> getAllImagesForBreed(String breed);
+    //@Query("SELECT imageUri FROM AnimalBreedEntry WHERE breed = :breed")
+    //List<String> getAllImagesForBreed(String breed);
 
     @Insert
     void insertAll(AnimalBreedEntry... breed);
